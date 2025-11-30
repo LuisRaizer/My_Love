@@ -41,7 +41,7 @@ class _HomeComponentState extends State<HomeComponent> {
   }
 
   void _startBalloons() {
-    Future.delayed(const Duration(seconds: 3), _addBalloon);
+    Future.delayed(const Duration(seconds: 10), _addBalloon);
     
     Timer.periodic(const Duration(seconds: 10), (timer) {
       if (mounted) _addBalloon();
