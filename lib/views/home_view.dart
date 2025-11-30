@@ -7,7 +7,7 @@ import 'package:app/components/home_component.dart';
 import 'package:app/components/letter_component.dart';
 import 'package:app/components/timer_component.dart';
 import 'package:app/components/stats_component.dart';
-import 'package:app/components/gift_component.dart';
+import 'package:app/components/love_messagens_component.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -25,7 +25,7 @@ class _HomeViewState extends State<HomeView> {
     'Carta Especial',
     'Nosso Tempo',
     'Estatísticas',
-    'Presente',
+    'Mensagens',
   ];
 
   @override
@@ -55,11 +55,7 @@ class _HomeViewState extends State<HomeView> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF87CEEB),
-              Color(0xFFD7EFFF),
-              Colors.white,
-            ],
+            colors: [Color(0xFF87CEEB), Color(0xFFD7EFFF), Colors.white],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
@@ -106,21 +102,15 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _buildSlideTransition(Widget child, Animation<double> animation) {
     final bool isGoingDown = _currentIndex > _previousIndex;
-    
+
     final slideAnimation = Tween<Offset>(
       begin: Offset(0.0, isGoingDown ? -1.0 : 1.0), // Vem de cima ou de baixo
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: animation,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut));
 
     return SlideTransition(
       position: slideAnimation,
-      child: FadeTransition(
-        opacity: animation,
-        child: child,
-      ),
+      child: FadeTransition(opacity: animation, child: child),
     );
   }
 
@@ -132,17 +122,11 @@ class _HomeViewState extends State<HomeView> {
           final slideAnimation = Tween<Offset>(
             begin: Offset(0.0, -0.5),
             end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          ));
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
 
           return SlideTransition(
             position: slideAnimation,
-            child: FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
+            child: FadeTransition(opacity: animation, child: child),
           );
         },
         child: Text(
@@ -189,10 +173,7 @@ class _HomeViewState extends State<HomeView> {
           appController: _appController,
         );
       case 4:
-        return GiftComponent(
-          key: ValueKey('gift'),
-          appController: _appController,
-        );
+        return LoveMessagesComponent();
       default:
         return HomeComponent(
           key: ValueKey('home_default'),
@@ -217,25 +198,16 @@ class _HomeViewState extends State<HomeView> {
       showSelectedLabels: true,
       showUnselectedLabels: true,
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Início',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.email),
-          label: 'Carta',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.timer),
-          label: 'Tempo',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+        BottomNavigationBarItem(icon: Icon(Icons.email), label: 'Carta'),
+        BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Tempo'),
         BottomNavigationBarItem(
           icon: Icon(Icons.bar_chart),
           label: 'Estatísticas',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.card_giftcard),
-          label: 'Presente',
+          icon: Icon(Icons.messenger),
+          label: 'Mensagens',
         ),
       ],
     );
