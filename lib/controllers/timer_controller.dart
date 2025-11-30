@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class TimerController extends ChangeNotifier {
-  final DateTime _firstKissDate = DateTime(2024, 5, 15);
+  final DateTime _firstKissDate = DateTime(2025, 5, 15);
   Duration _timeTogether = Duration.zero;
   Timer? _timer;
 
@@ -25,12 +25,11 @@ class TimerController extends ChangeNotifier {
   }
 
   String getFormattedTime() {
-    int years = _timeTogether.inDays ~/ 365;
     int months = (_timeTogether.inDays % 365) ~/ 30;
     int days = _timeTogether.inDays % 30;
     int hours = _timeTogether.inHours % 24;
 
-    return '$years anos, $months meses, $days dias e $hours horas';
+    return '$months meses, $days dias e $hours horas';
   }
 
   @override

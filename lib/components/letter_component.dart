@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 
-class LetterTab extends StatelessWidget {
+class LetterComponent extends StatelessWidget {
   final AppController appController;
 
-  const LetterTab({Key? key, required this.appController}) : super(key: key);
+  const LetterComponent({super.key, required this.appController});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Text('Carta Especial', style: TextStyle(fontFamily: 'FredokaOne')),
-        ),
-        SliverToBoxAdapter(
-          child: _buildLetterCard(),
-        ),
+        SliverToBoxAdapter(child: _buildLetterCard()),
       ],
     );
   }
@@ -31,10 +25,7 @@ class LetterTab extends StatelessWidget {
           children: [
             Text(
               '📝 Uma Carta Especial para Ti',
-              style: TextStyle(
-                fontFamily: 'FredokaOne',
-                fontSize: 20,
-              ),
+              style: TextStyle(fontFamily: 'FredokaOne', fontSize: 20),
             ),
             SizedBox(height: 16),
             Text(_getLetterContent()),

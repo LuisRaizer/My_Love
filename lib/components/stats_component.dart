@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 
-class StatsTab extends StatelessWidget {
+class StatsComponent extends StatelessWidget {
   final AppController appController;
 
-  const StatsTab({Key? key, required this.appController}) : super(key: key);
+  const StatsComponent({super.key, required this.appController});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Text('Estatísticas', style: TextStyle(fontFamily: 'FredokaOne')),
-        ),
-        SliverToBoxAdapter(
-          child: _buildStatsCard(),
-        ),
+        SliverToBoxAdapter(child: _buildStatsCard()),
       ],
     );
   }
@@ -30,16 +24,16 @@ class StatsTab extends StatelessWidget {
           children: [
             Text(
               '📊 Nossas Estatísticas',
-              style: TextStyle(
-                fontFamily: 'FredokaOne',
-                fontSize: 20,
-              ),
+              style: TextStyle(fontFamily: 'FredokaOne', fontSize: 20),
             ),
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatItem(appController.state.loveCount.toString(), 'Te Amo'),
+                _buildStatItem(
+                  appController.state.loveCount.toString(),
+                  'Te Amo',
+                ),
                 _buildStatItem('127', 'Horas Discord'),
                 _buildStatItem('+1000', 'Cuidado Amor'),
               ],

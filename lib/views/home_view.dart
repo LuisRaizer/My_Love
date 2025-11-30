@@ -19,6 +19,14 @@ class _HomeViewState extends State<HomeView> {
   final TimerController _timerController = TimerController();
   int _currentIndex = 0;
 
+  final List<String> _appBarTitles = [
+    'Meu Amor',
+    'Carta Especial',
+    'Nosso Tempo',
+    'Estatísticas',
+    'Presente',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -38,62 +46,94 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildMainView() {
-    return Scaffold(
-      backgroundColor: _appController.state.themeMode == ThemeMode.light
-          ? Color(0xFF87CEEB)
-          : Color(0xFF1a1a2e),
-      body: Stack(
-        children: [
-          _buildCurrentTab(),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _appController.confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              shouldLoop: false,
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.pink,
-                Colors.orange,
-                Colors.purple,
+    Widget _buildMainView() {
+      return Scaffold(
+      appBar: _buildAppBar(),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF87CEEB),
+                Color(0xFFD7EFFF),
+                Colors.white,
               ],
+              stops: [0.0, 0.5, 1.0],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _currentIndex == 0
-          ? FloatingActionButton(
-              onPressed: _appController.toggleMusic,
-              child: Icon(
-                _appController.state.isMusicPlaying
-                    ? Icons.volume_up
-                    : Icons.volume_off,
+          child: Stack(
+            children: [
+              _buildCurrentComponent(),
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConfettiWidget(
+                  confettiController: _appController.confettiController,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  shouldLoop: false,
+                  colors: const [
+                    Colors.green,
+                    Colors.blue,
+                    Colors.pink,
+                    Colors.orange,
+                    Colors.purple,
+                  ],
+                ),
               ),
-            )
-          : null,
-    );
-  }
+            ],
+          ),
+        ),
+        bottomNavigationBar: _buildBottomNavigationBar(),
+        floatingActionButton: _currentIndex == 0
+            ? FloatingActionButton(
+                onPressed: _appController.toggleMusic,
+                child: Icon(
+                  _appController.state.isMusicPlaying
+                      ? Icons.volume_up
+                      : Icons.volume_off,
+                ),
+              )
+            : null,
+      );
+    }
 
-  Widget _buildCurrentTab() {
+    AppBar _buildAppBar() {
+      return AppBar(
+        title: Text(
+          _appBarTitles[_currentIndex],
+          style: TextStyle(
+            fontFamily: 'FredokaOne',
+            fontSize: 26,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFFe83f3f),
+          ),
+        ),
+        backgroundColor: Color(0xFF87CEEB),
+        shape: Border(
+          bottom: BorderSide(width: 1, color: const Color.fromARGB(255, 0, 0, 0)),
+        ),
+        elevation: 2,
+        centerTitle: true,
+      );
+    }
+
+  Widget _buildCurrentComponent() {
     switch (_currentIndex) {
       case 0:
-        return HomeTab(
+        return HomeComponent(
           appController: _appController,
           timerController: _timerController,
         );
       case 1:
-        return LetterTab(appController: _appController);
+        return LetterComponent(appController: _appController);
       case 2:
-        return TimerTab(timerController: _timerController);
+        return TimerComponent(timerController: _timerController);
       case 3:
-        return StatsTab(appController: _appController);
+        return StatsComponent(appController: _appController);
       case 4:
-        return GiftTab(appController: _appController);
+        return GiftComponent(appController: _appController);
       default:
-        return HomeTab(
+        return HomeComponent(
           appController: _appController,
           timerController: _timerController,
         );
