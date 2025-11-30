@@ -14,12 +14,11 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin {
+class _HomeViewState extends State<HomeView> {
   final AppController _appController = AppController();
   final TimerController _timerController = TimerController();
   int _currentIndex = 0;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
+  int _previousIndex = 0;
 
   final List<String> _appBarTitles = [
     'Meu Amor',
@@ -33,21 +32,6 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _appController.initialize();
-    
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _animationController.forward();
   }
 
   @override
@@ -56,35 +40,10 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
       listenable: _appController.state,
       builder: (context, child) {
         if (_appController.state.showIntro) {
-          return _buildIntroWithTransition();
+          return IntroView(appController: _appController);
         }
         return _buildMainView();
       },
-    );
-  }
-
-  Widget _buildIntroWithTransition() {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 800),
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(
-            scale: Tween<double>(
-              begin: 0.9,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.fastOutSlowIn,
-            )),
-            child: child,
-          ),
-        );
-      },
-      child: IntroView(
-        key: const ValueKey('intro'),
-        appController: _appController,
-      ),
     );
   }
 
@@ -106,8 +65,11 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
         ),
         child: Stack(
           children: [
-            FadeTransition(
-              opacity: _fadeAnimation,
+            AnimatedSwitcher(
+              duration: Duration(milliseconds: 400),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return _buildSlideTransition(child, animation);
+              },
               child: _buildCurrentComponent(),
             ),
             Align(
@@ -142,10 +104,47 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     );
   }
 
+  Widget _buildSlideTransition(Widget child, Animation<double> animation) {
+    final bool isGoingDown = _currentIndex > _previousIndex;
+    
+    final slideAnimation = Tween<Offset>(
+      begin: Offset(0.0, isGoingDown ? -1.0 : 1.0), // Vem de cima ou de baixo
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeInOut,
+    ));
+
+    return SlideTransition(
+      position: slideAnimation,
+      child: FadeTransition(
+        opacity: animation,
+        child: child,
+      ),
+    );
+  }
+
   AppBar _buildAppBar() {
     return AppBar(
       title: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          final slideAnimation = Tween<Offset>(
+            begin: Offset(0.0, -0.5),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          ));
+
+          return SlideTransition(
+            position: slideAnimation,
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
         child: Text(
           _appBarTitles[_currentIndex],
           key: ValueKey(_currentIndex),
@@ -167,45 +166,36 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
   }
 
   Widget _buildCurrentComponent() {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      switchInCurve: Curves.easeInOut,
-      switchOutCurve: Curves.easeInOut,
-      child: _getCurrentComponent(),
-    );
-  }
-
-  Widget _getCurrentComponent() {
     switch (_currentIndex) {
       case 0:
         return HomeComponent(
-          key: const ValueKey(0),
+          key: ValueKey('home'),
           appController: _appController,
           timerController: _timerController,
         );
       case 1:
         return LetterComponent(
-          key: const ValueKey(1),
+          key: ValueKey('letter'),
           appController: _appController,
         );
       case 2:
         return TimerComponent(
-          key: const ValueKey(2),
+          key: ValueKey('timer'),
           timerController: _timerController,
         );
       case 3:
         return StatsComponent(
-          key: const ValueKey(3),
+          key: ValueKey('stats'),
           appController: _appController,
         );
       case 4:
         return GiftComponent(
-          key: const ValueKey(4),
+          key: ValueKey('gift'),
           appController: _appController,
         );
       default:
         return HomeComponent(
-          key: const ValueKey(0),
+          key: ValueKey('home_default'),
           appController: _appController,
           timerController: _timerController,
         );
@@ -216,11 +206,10 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
     return BottomNavigationBar(
       currentIndex: _currentIndex,
       onTap: (index) {
-        _animationController.reset();
         setState(() {
+          _previousIndex = _currentIndex;
           _currentIndex = index;
         });
-        _animationController.forward();
       },
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Color(0xFFe83f3f),
@@ -254,7 +243,6 @@ class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin
 
   @override
   void dispose() {
-    _animationController.dispose();
     _appController.dispose();
     _timerController.dispose();
     super.dispose();
