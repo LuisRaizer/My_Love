@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 
-class GiftTab extends StatelessWidget {
+class GiftComponent extends StatelessWidget {
   final AppController appController;
 
-  const GiftTab({Key? key, required this.appController}) : super(key: key);
+  const GiftComponent({Key? key, required this.appController})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,7 @@ class GiftTab extends StatelessWidget {
           backgroundColor: Colors.transparent,
           title: Text('Presente', style: TextStyle(fontFamily: 'FredokaOne')),
         ),
-        SliverToBoxAdapter(
-          child: _buildGiftCard(),
-        ),
+        SliverToBoxAdapter(child: _buildGiftCard()),
       ],
     );
   }
@@ -30,18 +29,12 @@ class GiftTab extends StatelessWidget {
           children: [
             Text(
               '🎁 Seu Presente',
-              style: TextStyle(
-                fontFamily: 'FredokaOne',
-                fontSize: 20,
-              ),
+              style: TextStyle(fontFamily: 'FredokaOne', fontSize: 20),
             ),
             SizedBox(height: 16),
             Text(
               'Toque na caixa para abrir seu presente especial!',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
@@ -90,10 +83,7 @@ class GiftTab extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 5),
-                            Text(
-                              '❤️',
-                              style: TextStyle(fontSize: 20),
-                            ),
+                            Text('❤️', style: TextStyle(fontSize: 20)),
                           ],
                         ),
                       ),

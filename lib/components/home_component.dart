@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/timer_controller.dart';
 
-class HomeTab extends StatefulWidget {
+class HomeComponent extends StatefulWidget {
   final AppController appController;
   final TimerController timerController;
 
-  const HomeTab({
+  const HomeComponent({
     Key? key,
     required this.appController,
     required this.timerController,
   }) : super(key: key);
 
   @override
-  _HomeTabState createState() => _HomeTabState();
+  _HomeComponentState createState() => _HomeComponentState();
 }
 
-class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
+class _HomeComponentState extends State<HomeComponent>
+    with SingleTickerProviderStateMixin {
   late AnimationController _bounceController;
   late Animation<double> _bounceAnimation;
 
@@ -27,14 +28,10 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
       duration: Duration(seconds: 3),
       vsync: this,
     )..repeat(reverse: true);
-    
-    _bounceAnimation = Tween<double>(
-      begin: 0,
-      end: -15,
-    ).animate(CurvedAnimation(
-      parent: _bounceController,
-      curve: Curves.easeInOut,
-    ));
+
+    _bounceAnimation = Tween<double>(begin: 0, end: -15).animate(
+      CurvedAnimation(parent: _bounceController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -45,20 +42,17 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
           backgroundColor: Colors.transparent,
           actions: [
             IconButton(
-              icon: Icon(widget.appController.state.themeMode == ThemeMode.light
-                  ? Icons.nightlight_round
-                  : Icons.wb_sunny),
+              icon: Icon(
+                widget.appController.state.themeMode == ThemeMode.light
+                    ? Icons.nightlight_round
+                    : Icons.wb_sunny,
+              ),
               onPressed: widget.appController.toggleTheme,
             ),
           ],
         ),
         SliverToBoxAdapter(
-          child: Column(
-            children: [
-              _buildSnoopyWithHouse(),
-              _buildTitle(),
-            ],
-          ),
+          child: Column(children: [_buildSnoopyWithHouse(), _buildTitle()]),
         ),
       ],
     );
@@ -69,7 +63,6 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
       height: 400,
       child: Stack(
         children: [
-          // Casa do Snoopy como GIF
           Center(
             child: AnimatedBuilder(
               animation: _bounceAnimation,
@@ -94,90 +87,15 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  child: Image.network(
-                    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGF4dHI3cXFmbzVjOWI1ODF6d2YxYnMybGUzcXc5dW96b21wc3B2aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/M67g2AK7Eal7G/giphy.gif',
+                  child: Image.asset(
+                    'lib/assets/snoopy.gif',
                     fit: BoxFit.contain,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildFallbackSnoopy();
-                    },
                   ),
                 ),
               ),
             ),
           ),
-          
-          // Balão de pensamento
-          Positioned(
-            top: 50,
-            right: 20,
-            child: _buildThoughtBubble(),
-          ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFallbackSnoopy() {
-    return Container(
-      width: 200,
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: Colors.black, width: 3),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.pets, size: 80, color: Colors.black),
-          SizedBox(height: 10),
-          Text(
-            'Snoopy',
-            style: TextStyle(
-              fontFamily: 'FredokaOne',
-              fontSize: 20,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildThoughtBubble() {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.black, width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 5,
-            offset: Offset(2, 2),
-          ),
-        ],
-      ),
-      child: Text(
-        'Feliz Aniversário!\n🎉🎂',
-        style: TextStyle(
-          fontFamily: 'PatrickHand',
-          fontSize: 14,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.center,
       ),
     );
   }

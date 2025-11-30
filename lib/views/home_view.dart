@@ -45,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
           : Color(0xFF1a1a2e),
       body: Stack(
         children: [
-          _buildCurrentTab(),
+          _buildCurrentComponent(),
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -77,23 +77,23 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _buildCurrentTab() {
+  Widget _buildCurrentComponent() {
     switch (_currentIndex) {
       case 0:
-        return HomeTab(
+        return HomeComponent(
           appController: _appController,
           timerController: _timerController,
         );
       case 1:
-        return LetterTab(appController: _appController);
+        return LetterComponent(appController: _appController);
       case 2:
-        return TimerTab(timerController: _timerController);
+        return TimerComponent(timerController: _timerController);
       case 3:
-        return StatsTab(appController: _appController);
+        return StatsComponent(appController: _appController);
       case 4:
-        return GiftTab(appController: _appController);
+        return GiftComponent(appController: _appController);
       default:
-        return HomeTab(
+        return HomeComponent(
           appController: _appController,
           timerController: _timerController,
         );
