@@ -4,20 +4,12 @@ import 'package:app/controllers/app_controller.dart';
 class LetterComponent extends StatelessWidget {
   final AppController appController;
 
-  const LetterComponent({Key? key, required this.appController})
-    : super(key: key);
+  const LetterComponent({super.key, required this.appController});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            'Carta Especial',
-            style: TextStyle(fontFamily: 'FredokaOne'),
-          ),
-        ),
         SliverToBoxAdapter(child: _buildLetterCard()),
       ],
     );

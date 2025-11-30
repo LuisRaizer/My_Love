@@ -4,20 +4,12 @@ import 'package:app/controllers/timer_controller.dart';
 class TimerComponent extends StatelessWidget {
   final TimerController timerController;
 
-  const TimerComponent({Key? key, required this.timerController})
-    : super(key: key);
+  const TimerComponent({super.key, required this.timerController});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            'Nosso Tempo',
-            style: TextStyle(fontFamily: 'FredokaOne'),
-          ),
-        ),
         SliverToBoxAdapter(child: _buildTimerCard()),
       ],
     );
@@ -34,7 +26,7 @@ class TimerComponent extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '❤️ Desde Nosso Primeiro Beijo',
+                  '❤️ Desde Nosso "Primeiro" Beijo',
                   style: TextStyle(fontFamily: 'FredokaOne', fontSize: 20),
                 ),
                 SizedBox(height: 16),

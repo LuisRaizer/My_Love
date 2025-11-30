@@ -4,17 +4,12 @@ import 'package:app/controllers/app_controller.dart';
 class GiftComponent extends StatelessWidget {
   final AppController appController;
 
-  const GiftComponent({Key? key, required this.appController})
-    : super(key: key);
+  const GiftComponent({super.key, required this.appController});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Text('Presente', style: TextStyle(fontFamily: 'FredokaOne')),
-        ),
         SliverToBoxAdapter(child: _buildGiftCard()),
       ],
     );

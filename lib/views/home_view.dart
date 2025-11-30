@@ -19,6 +19,15 @@ class _HomeViewState extends State<HomeView> {
   final TimerController _timerController = TimerController();
   int _currentIndex = 0;
 
+  // Títulos para cada Component
+  final List<String> _appBarTitles = [
+    'Meu Amor',
+    'Carta Especial',
+    'Nosso Tempo',
+    'Estatísticas',
+    'Presente',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: _appController.state.themeMode == ThemeMode.light
           ? Color(0xFF87CEEB)
           : Color(0xFF1a1a2e),
+      appBar: _buildAppBar(),
       body: Stack(
         children: [
           _buildCurrentComponent(),
@@ -74,6 +84,23 @@ class _HomeViewState extends State<HomeView> {
               ),
             )
           : null,
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(
+        _appBarTitles[_currentIndex],
+        style: TextStyle(
+          fontFamily: 'FredokaOne',
+          fontSize: 26,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFFe83f3f),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      elevation: 2,
+      centerTitle: true,
     );
   }
 

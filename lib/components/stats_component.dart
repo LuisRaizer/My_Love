@@ -4,20 +4,12 @@ import 'package:app/controllers/app_controller.dart';
 class StatsComponent extends StatelessWidget {
   final AppController appController;
 
-  const StatsComponent({Key? key, required this.appController})
-    : super(key: key);
+  const StatsComponent({super.key, required this.appController});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          title: Text(
-            'Estatísticas',
-            style: TextStyle(fontFamily: 'FredokaOne'),
-          ),
-        ),
         SliverToBoxAdapter(child: _buildStatsCard()),
       ],
     );

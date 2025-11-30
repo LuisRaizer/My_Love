@@ -12,10 +12,6 @@ class AppController extends ChangeNotifier {
 
   void initialize() {}
 
-  void toggleTheme() {
-    _state.toggleTheme();
-  }
-
   void toggleMusic() async {
     if (_state.isMusicPlaying) {
       await _musicService.pause();
