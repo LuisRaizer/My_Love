@@ -160,14 +160,7 @@ class _HomeComponentState extends State<HomeComponent> {
       style: TextStyle(
         fontFamily: 'FredokaOne',
         fontSize: 32,
-        color: Colors.white,
-        shadows: [
-          const Shadow(
-            offset: Offset(2, 2),
-            blurRadius: 0,
-            color: Colors.black,
-          ),
-        ],
+        color: const Color.fromARGB(255, 0, 0, 0),
       ),
     );
   }
