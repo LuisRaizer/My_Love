@@ -46,7 +46,7 @@ class _HomeComponentState extends State<HomeComponent> {
   }
 
   void _startBalloons() {    
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 10), (timer) {
       if (mounted && _balloons.length < 4) {
         _addBalloon();
       }

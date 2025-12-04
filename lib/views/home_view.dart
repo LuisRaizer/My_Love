@@ -5,11 +5,12 @@ import 'package:app/controllers/timer_controller.dart';
 import 'package:app/views/intro_view.dart';
 import 'package:app/components/home_component.dart';
 import 'package:app/components/letter_component.dart';
-import 'package:app/components/timer_component.dart';
-import 'package:app/components/stats_component.dart';
+import 'package:app/components/our_space_component.dart';
 import 'package:app/components/love_messagens_component.dart';
 
 class HomeView extends StatefulWidget {
+  const HomeView({super.key});
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -23,8 +24,7 @@ class _HomeViewState extends State<HomeView> {
   final List<String> _appBarTitles = [
     'Meu Amor',
     'Carta Especial',
-    'Nosso Tempo',
-    'Estatísticas',
+    'Nosso Espaço',
     'Mensagens',
   ];
 
@@ -153,16 +153,12 @@ class _HomeViewState extends State<HomeView> {
           appController: _appController,
         );
       case 2:
-        return TimerComponent(
-          key: ValueKey('timer'),
+        return OurSpaceComponent(
+          key: ValueKey('our_space'),
+          appController: _appController,
           timerController: _timerController,
         );
       case 3:
-        return StatsComponent(
-          key: ValueKey('stats'),
-          appController: _appController,
-        );
-      case 4:
         return LoveMessagesComponent();
       default:
         return HomeComponent(
@@ -190,11 +186,7 @@ class _HomeViewState extends State<HomeView> {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
         BottomNavigationBarItem(icon: Icon(Icons.email), label: 'Carta'),
-        BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Tempo'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bar_chart),
-          label: 'Estatísticas',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.space_dashboard), label: 'Nosso Espaço'),
         BottomNavigationBarItem(
           icon: Icon(Icons.messenger),
           label: 'Mensagens',
