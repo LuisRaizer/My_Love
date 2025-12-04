@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:app/widgets/balloon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/timer_controller.dart';
@@ -21,9 +22,10 @@ class HomeComponent extends StatefulWidget {
 
 class _HomeComponentState extends State<HomeComponent> {
   final List<Map<String, dynamic>> _balloons = [];
+  final Random _random = Random();
+  
   final List<String> _messages = [
     'Amo ela',
-    'Era para ser o snoopy pensando',
     'Será que ela vai gostar disso?',
     'Tomara que ela lembre sempre que usar',
     'R + G = ❤️‍🩹',
@@ -31,7 +33,10 @@ class _HomeComponentState extends State<HomeComponent> {
     'Eu tentei fazer o que pude',
     'Ta tudo registrado',
     'Ela odeia homens, mas me ama KKKK',
-    'Amo muito ela',
+    'Era só um boa noite ao vivo que eu dormia mansinho',
+    'sempre querendo ela',
+    'que saudade, meu deus',
+    'se vc clicar no balão, ele desaparece',
   ];
 
   @override
@@ -40,28 +45,28 @@ class _HomeComponentState extends State<HomeComponent> {
     _startBalloons();
   }
 
-  void _startBalloons() {
-    Future.delayed(const Duration(seconds: 10), _addBalloon);
-    
+  void _startBalloons() {    
     Timer.periodic(const Duration(seconds: 10), (timer) {
-      if (mounted) _addBalloon();
+      if (mounted && _balloons.length < 4) {
+        _addBalloon();
+      }
     });
   }
 
   void _addBalloon() {
     if (!mounted) return;
     
-    final random = Random();
     setState(() {
       _balloons.add({
         'id': DateTime.now().millisecondsSinceEpoch,
-        'message': _messages[random.nextInt(_messages.length)],
-        'left': random.nextDouble() * 160 + 20,
+        'message': _messages[_random.nextInt(_messages.length)],
+        'left': _random.nextDouble() * 200 + 30,
+        'top': _random.nextDouble() * 50 + 20,
         'opacity': 1.0,
       });
     });
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 12), () {
       if (mounted && _balloons.isNotEmpty) {
         setState(() {
           _balloons.removeAt(0);
@@ -114,42 +119,20 @@ class _HomeComponentState extends State<HomeComponent> {
             ),
           ),
           
-          ..._balloons.map(_buildBalloon),
+          ..._balloons.map((balloon) {
+            return BalloonWidget(
+              message: balloon['message'] as String,
+              left: balloon['left'] as double,
+              top: balloon['top'] as double,
+              opacity: balloon['opacity'] as double,
+              onTap: () {
+                setState(() {
+                  _balloons.remove(balloon);
+                });
+              },
+            );
+          }),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBalloon(Map<String, dynamic> balloon) {
-    return Positioned(
-      left: balloon['left'] as double,
-      top: 30,
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 1000),
-        opacity: balloon['opacity'] as double,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.greenAccent, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Text(
-            balloon['message'] as String,
-            style: const TextStyle(
-              color: Colors.green,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
       ),
     );
   }
