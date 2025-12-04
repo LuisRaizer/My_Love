@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/models/app_state.dart';
-import 'package:app/services/music_service.dart';
 
 class AppController extends ChangeNotifier {
   final AppState _state = AppState();
-  final MusicService _musicService = MusicService();
   final ConfettiController confettiController = ConfettiController(duration: Duration(seconds: 2));
 
   AppState get state => _state;
@@ -22,8 +20,6 @@ class AppController extends ChangeNotifier {
       
       if (shouldSkipIntro) {
         _state.hideIntro();
-        await _musicService.play();
-        _state.toggleMusic();
       }
     } catch (e) {
       print('Erro ao verificar preferência de intro: $e');
@@ -38,16 +34,6 @@ class AppController extends ChangeNotifier {
       print('Erro ao salvar preferência de intro: $e');
     }
   }
-
-  void toggleMusic() async {
-    if (_state.isMusicPlaying) {
-      await _musicService.pause();
-    } else {
-      await _musicService.play();
-    }
-    _state.toggleMusic();
-  }
-
   
 
   void startApp({bool skipIntroNextTime = false}) async {
@@ -56,8 +42,6 @@ class AppController extends ChangeNotifier {
     }
     
     _state.hideIntro();
-    
-    await _musicService.play();
     _state.toggleMusic();
     confettiController.play();
   }
@@ -84,7 +68,6 @@ class AppController extends ChangeNotifier {
 
   @override
   void dispose() {
-    _musicService.dispose();
     confettiController.dispose();
     super.dispose();
   }
