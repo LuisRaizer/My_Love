@@ -87,16 +87,6 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _currentIndex == 0
-          ? FloatingActionButton(
-              onPressed: _appController.toggleMusic,
-              child: Icon(
-                _appController.state.isMusicPlaying
-                    ? Icons.volume_up
-                    : Icons.volume_off,
-              ),
-            )
-          : null,
     );
   }
 
@@ -104,7 +94,7 @@ class _HomeViewState extends State<HomeView> {
     final bool isGoingDown = _currentIndex > _previousIndex;
 
     final slideAnimation = Tween<Offset>(
-      begin: Offset(0.0, isGoingDown ? -1.0 : 1.0), // Vem de cima ou de baixo
+      begin: Offset(0.0, isGoingDown ? -1.0 : 1.0),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut));
 

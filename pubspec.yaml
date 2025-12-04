@@ -28,6 +28,6 @@ flutter_icons:
 flutter:
   uses-material-design: true
   
-  # Assets must be indented under flutter section
   assets:
     - lib/assets/snoopy.gif
+    - lib/assets/pop.wav
