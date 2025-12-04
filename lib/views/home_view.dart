@@ -7,6 +7,7 @@ import 'package:app/components/home_component.dart';
 import 'package:app/components/letter_component.dart';
 import 'package:app/components/our_space_component.dart';
 import 'package:app/components/love_messagens_component.dart';
+import 'package:app/components/settings_component.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -26,6 +27,7 @@ class _HomeViewState extends State<HomeView> {
     'Carta Especial',
     'Nosso Espaço',
     'Mensagens',
+    'Configurações', // Adicione este título
   ];
 
   @override
@@ -160,6 +162,11 @@ class _HomeViewState extends State<HomeView> {
         );
       case 3:
         return LoveMessagesComponent();
+      case 5: // Novo item: Configurações
+        return SettingsComponent(
+          key: ValueKey('settings'),
+          appController: _appController,
+        );
       default:
         return HomeComponent(
           key: ValueKey('home_default'),
@@ -190,6 +197,10 @@ class _HomeViewState extends State<HomeView> {
         BottomNavigationBarItem(
           icon: Icon(Icons.messenger),
           label: 'Mensagens',
+        ),
+        BottomNavigationBarItem( // Novo item
+          icon: Icon(Icons.settings),
+          label: 'Configurações',
         ),
       ],
     );
