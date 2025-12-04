@@ -15,6 +15,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  bool _skipIntroNextTime = false;
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 80),
             ScaleTransition(
               scale: _scaleAnimation,
               child: Container(
@@ -83,6 +85,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
                     ),
                   ],
                 ),
+                
                 child: const Icon(Icons.favorite, size: 100, color: Color(0xFFe83f3f)),
               ),
             ),
@@ -109,7 +112,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
                 ),
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             
             ScaleTransition(
               scale: _scaleAnimation,
@@ -118,7 +121,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
                 child: ElevatedButton(
                   onPressed: () async {
                     await _animationController.reverse();
-                    widget.appController.startApp();
+                    widget.appController.startApp(skipIntroNextTime: _skipIntroNextTime);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -135,6 +138,81 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 120),
+            
+            SlideTransition(
+              position: _slideAnimation,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _skipIntroNextTime = !_skipIntroNextTime;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: _skipIntroNextTime 
+                                  ? Colors.white 
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                            child: _skipIntroNextTime
+                                ? Icon(
+                                    Icons.check,
+                                    size: 12,
+                                    color: Color(0xFFe83f3f),
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Não mostrar novamente',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          shadows: [
+                            Shadow(
+                              offset: const Offset(1, 1),
+                              blurRadius: 2,
+                              color: Colors.black.withOpacity(0.2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

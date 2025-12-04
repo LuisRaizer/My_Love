@@ -13,6 +13,11 @@ class AppState extends ChangeNotifier {
   int get loveCount => _loveCount;
   bool get giftOpened => _giftOpened;
 
+  set showIntro(bool value) {
+    _showIntro = value;
+    notifyListeners();
+  }
+
   void toggleTheme() {
     _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
