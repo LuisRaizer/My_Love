@@ -67,7 +67,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 80),
+            const SizedBox(height: 150),
             ScaleTransition(
               scale: _scaleAnimation,
               child: Container(
@@ -99,7 +99,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
                   'Olha quem chegou!',
                   style: TextStyle(
                     fontFamily: 'FredokaOne',
-                    fontSize: 28,
+                    fontSize: 32,
                     color: Colors.white,
                     shadows: [
                       Shadow(
@@ -126,9 +126,9 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFFe83f3f),
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 46, vertical: 22),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                     elevation: 8,
                   ),
@@ -143,7 +143,7 @@ class _IntroViewState extends State<IntroView> with SingleTickerProviderStateMix
               ),
             ),
             
-            const SizedBox(height: 120),
+            const SizedBox(height: 180),
             
             SlideTransition(
               position: _slideAnimation,

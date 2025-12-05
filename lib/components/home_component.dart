@@ -23,6 +23,7 @@ class HomeComponent extends StatefulWidget {
 class _HomeComponentState extends State<HomeComponent> {
   final List<Map<String, dynamic>> _balloons = [];
   final Random _random = Random();
+  Timer? _balloonTimer;
   
   final List<String> _messages = [
     'Amo ela',
@@ -36,7 +37,7 @@ class _HomeComponentState extends State<HomeComponent> {
     'Era só um boa noite ao vivo que eu dormia mansinho',
     'sempre querendo ela',
     'que saudade, meu deus',
-    'se vc clicar no balão, ele desaparece',
+    'se vc clicar no balão, ele estoura',
   ];
 
   @override
@@ -45,9 +46,19 @@ class _HomeComponentState extends State<HomeComponent> {
     _startBalloons();
   }
 
+  @override
+  void dispose() {
+    _balloonTimer?.cancel();
+    for (var balloon in _balloons) {
+      final timer = balloon['timer'] as Timer?;
+      timer?.cancel();
+    }
+    super.dispose();
+  }
+
   void _startBalloons() {    
-    Timer.periodic(const Duration(seconds: 10), (timer) {
-      if (mounted && _balloons.length < 4) {
+    _balloonTimer = Timer.periodic(const Duration(seconds: 8), (timer) {
+      if (mounted) {
         _addBalloon();
       }
     });
@@ -56,22 +67,46 @@ class _HomeComponentState extends State<HomeComponent> {
   void _addBalloon() {
     if (!mounted) return;
     
-    setState(() {
-      _balloons.add({
-        'id': DateTime.now().millisecondsSinceEpoch,
-        'message': _messages[_random.nextInt(_messages.length)],
-        'left': _random.nextDouble() * 200 + 30,
-        'top': _random.nextDouble() * 50 + 20,
-        'opacity': 1.0,
+    if (_balloons.length > 7) {
+      setState(() {
+        final balloonToRemove = _balloons.first;
+        final timer = balloonToRemove['timer'] as Timer?;
+        timer?.cancel();
+        _balloons.removeAt(0);
       });
-    });
-
-    Future.delayed(const Duration(seconds: 12), () {
-      if (mounted && _balloons.isNotEmpty) {
+    }
+    
+    final id = DateTime.now().millisecondsSinceEpoch + _random.nextInt(1000);
+    
+    final Map<String, dynamic> balloon = {
+      'id': id,
+      'message': _messages[_random.nextInt(_messages.length)],
+      'left': _random.nextDouble() * 200 + 30,
+      'top': _random.nextDouble() * 50 + 20,
+      'opacity': 1.0,
+    };
+    
+    final Timer removalTimer = Timer(const Duration(seconds: 20), () {
+      if (mounted) {
         setState(() {
-          _balloons.removeAt(0);
+          _balloons.removeWhere((b) => b['id'] == id);
         });
       }
+    });
+    
+    balloon['timer'] = removalTimer;
+    
+    setState(() {
+      _balloons.add(balloon);
+    });
+  }
+
+  void _removeBalloon(Map<String, dynamic> balloon) {
+    final timer = balloon['timer'] as Timer?;
+    timer?.cancel();
+    
+    setState(() {
+      _balloons.remove(balloon);
     });
   }
 
@@ -121,17 +156,16 @@ class _HomeComponentState extends State<HomeComponent> {
           
           ..._balloons.map((balloon) {
             return BalloonWidget(
+              key: ValueKey(balloon['id']),
               message: balloon['message'] as String,
               left: balloon['left'] as double,
               top: balloon['top'] as double,
               opacity: balloon['opacity'] as double,
               onTap: () {
-                setState(() {
-                  _balloons.remove(balloon);
-                });
+                _removeBalloon(balloon);
               },
             );
-          }),
+          }).toList(),
         ],
       ),
     );
