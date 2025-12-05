@@ -27,7 +27,7 @@ class _HomeViewState extends State<HomeView> {
     'Carta Especial',
     'Nosso Espaço',
     'Mensagens',
-    'Configurações', // Adicione este título
+    'Configurações',
   ];
 
   @override
@@ -162,14 +162,14 @@ class _HomeViewState extends State<HomeView> {
         );
       case 3:
         return LoveMessagesComponent();
-      case 5: // Novo item: Configurações
+      case 4:
         return SettingsComponent(
           key: ValueKey('settings'),
           appController: _appController,
         );
       default:
         return HomeComponent(
-          key: ValueKey('home_default'),
+          key: ValueKey('home'),
           appController: _appController,
           timerController: _timerController,
         );
@@ -198,7 +198,7 @@ class _HomeViewState extends State<HomeView> {
           icon: Icon(Icons.messenger),
           label: 'Mensagens',
         ),
-        BottomNavigationBarItem( // Novo item
+        BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: 'Configurações',
         ),

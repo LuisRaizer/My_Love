@@ -124,32 +124,4 @@ class _SettingsComponentState extends State<SettingsComponent> {
       ),
     );
   }
-
-  void _showResetConfirmationDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Resetar Estatísticas'),
-        content: Text('Tem certeza que deseja resetar o contador de amor? Esta ação não pode ser desfeita.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar', style: TextStyle(color: Colors.grey)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Aqui você pode adicionar lógica para resetar o contador
-              // widget.appController.resetLoveCount();
-              Navigator.pop(context);
-              _showSuccessSnackBar('Estatísticas resetadas com sucesso!');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
-            child: Text('Resetar'),
-          ),
-        ],
-      ),
-    );
-  }
 }

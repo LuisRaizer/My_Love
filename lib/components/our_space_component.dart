@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/timer_controller.dart';
 
