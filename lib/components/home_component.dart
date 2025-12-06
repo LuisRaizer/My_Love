@@ -136,7 +136,6 @@ class _HomeComponentState extends State<HomeComponent> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () => widget.appController.incrementLove(),
                   child: Container(
                     width: 250,
                     height: 250,
