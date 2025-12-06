@@ -3,7 +3,6 @@ import 'package:confetti/confetti.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/timer_controller.dart';
 import 'package:app/views/intro_view.dart';
-import 'package:app/components/home_component.dart';
 import 'package:app/components/letter_component.dart';
 import 'package:app/components/our_space_component.dart';
 import 'package:app/components/love_messagens_component.dart';
@@ -23,7 +22,6 @@ class _HomeViewState extends State<HomeView> {
   int _previousIndex = 0;
 
   final List<String> _appBarTitles = [
-    'Meu Amor',
     'Carta Especial',
     'Nosso Espaço',
     'Mensagens',
@@ -144,34 +142,27 @@ class _HomeViewState extends State<HomeView> {
   Widget _buildCurrentComponent() {
     switch (_currentIndex) {
       case 0:
-        return HomeComponent(
-          key: ValueKey('home'),
-          appController: _appController,
-          timerController: _timerController,
-        );
-      case 1:
         return LetterComponent(
           key: ValueKey('letter'),
           appController: _appController,
         );
-      case 2:
+      case 1:
         return OurSpaceComponent(
           key: ValueKey('our_space'),
           appController: _appController,
           timerController: _timerController,
         );
-      case 3:
+      case 2:
         return LoveMessagesComponent();
-      case 4:
+      case 3:
         return SettingsComponent(
           key: ValueKey('settings'),
           appController: _appController,
         );
       default:
-        return HomeComponent(
-          key: ValueKey('home'),
+        return LetterComponent(
+          key: ValueKey('letter'),
           appController: _appController,
-          timerController: _timerController,
         );
     }
   }
@@ -191,7 +182,6 @@ class _HomeViewState extends State<HomeView> {
       showSelectedLabels: true,
       showUnselectedLabels: true,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
         BottomNavigationBarItem(icon: Icon(Icons.email), label: 'Carta'),
         BottomNavigationBarItem(icon: Icon(Icons.space_dashboard), label: 'Nosso Espaço'),
         BottomNavigationBarItem(
