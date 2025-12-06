@@ -16,13 +16,22 @@ class SettingsComponent extends StatefulWidget {
 class _SettingsComponentState extends State<SettingsComponent> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: ListView(
-        children: [
-          _buildAppPreferences(),
-        ],
-      ),
+    return Stack(
+      children: [
+        ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            _buildAppPreferences(),
+            SizedBox(height: 80),
+          ],
+        ),
+        Positioned(
+          left: 20,
+          right: 20,
+          bottom: 20,
+          child: _buildSuggestionText(),
+        ),
+      ],
     );
   }
 
@@ -61,6 +70,28 @@ class _SettingsComponentState extends State<SettingsComponent> {
     );
   }
 
+  Widget _buildSuggestionText() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey[300]!,
+          width: 1,
+        ),
+      ),
+      child: Text(
+        'Caso você queira que eu troque algo no aplicativo ou adicione algo, pode me dizer',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.grey[700],
+          fontStyle: FontStyle.italic,
+        ),
+      ),
+    );
+  }
 
   Widget _buildSettingButton({
     required String title,
