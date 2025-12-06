@@ -32,3 +32,4 @@ flutter:
   assets:
     - lib/assets/snoopy.gif
     - lib/assets/pop.wav
+    - lib/assets/images/
