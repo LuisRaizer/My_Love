@@ -1,3 +1,4 @@
+import 'package:app/utils/personal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/timer_controller.dart';
@@ -64,44 +65,7 @@ class OurSpaceComponent extends StatelessWidget {
   }
 
   Widget _buildPhotosCard(BuildContext context) {
-    final List<Map<String, dynamic>> ourPhotos = [
-      {
-        'title': 'Bilhetinhos',
-        'image': 'lib/assets/images/Bilhetinhos.jpg',
-        'description': 'Ainda tenho foto KSKLSKL',
-        'date': '04/04/2024',
-      },
-      {
-        'title': 'O DIA',
-        'image': 'lib/assets/images/The_day.jpg',
-        'description': 'O início de tudo...',
-        'date': '15/05/2025',
-      },
-      {
-        'title': 'Bagunça insana',
-        'image': 'lib/assets/images/Bagunça.jpg',
-        'description': 'Esse dia foi insano, quase uma ocorrência da gorda',
-        'date': '04/06/2025',
-      },
-      {
-        'title': 'Eu ó',
-        'image': 'lib/assets/images/eu.jpg',
-        'description': 'Óia eu aí',
-        'date': '11/06/2025',
-      },
-      {
-        'title': 'Uma linda foto',
-        'image': 'lib/assets/images/Hospt.jpg',
-        'description': 'De uma linda mulher',
-        'date': '14/07/2025',
-      },
-      {
-        'title': 'A melhor amiga de minha mulher',
-        'image': 'lib/assets/images/bff.jpg',
-        'description': 'É minha "amiga" também... em tese',
-        'date': '05/08/2025',
-      },
-    ];
+    final List<Map<String, dynamic>> ourPhotos = PersonalConfig.galleryPhotos;
 
     return Card(
       margin: EdgeInsets.all(16),

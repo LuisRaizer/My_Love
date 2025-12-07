@@ -1,3 +1,4 @@
+import 'package:app/utils/personal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -258,7 +259,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
 
     await Future.delayed(Duration(milliseconds: 500));
     
-    String phone = '5585997593344';
+    String phone = PersonalConfig.whatsappNumber;
     
     String url = 'https://wa.me/$phone?text=${Uri.encodeComponent(finalMessage)}';
     

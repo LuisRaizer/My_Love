@@ -1,3 +1,4 @@
+import 'package:app/utils/personal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:app/views/home_view.dart';
 
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GadelhAPP',
+      title: PersonalConfig.appName,
       theme: ThemeData(
         primaryColor: Color(0xFFe83f3f),
         fontFamily: 'PatrickHand',

@@ -35,7 +35,6 @@ class _SettingsComponentState extends State<SettingsComponent> {
       print('Total estourados do storage: $totalPopped');
       
       _balloonController.startSpawning();
-      print('Spawn iniciado. Balões ativos: ${_balloonController.activeBalloons.length}');
     });
   }
   
@@ -93,7 +92,6 @@ class _SettingsComponentState extends State<SettingsComponent> {
   }
   
   Widget _buildBalloonArea() {
-    print('Criando BalloonArea...');
     return Container(
       height: 220,
       margin: const EdgeInsets.symmetric(horizontal: 10),

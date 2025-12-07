@@ -12,6 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 lib/assets/images/
+lib/utils/personal_content.dart
 
 # IntelliJ related
 *.iml
