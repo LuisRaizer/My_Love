@@ -20,6 +20,7 @@ class _SettingsComponentState extends State<SettingsComponent> {
   final List<Map<String, dynamic>> _balloons = [];
   final Random _random = Random();
   Timer? _balloonTimer;
+  bool _showSuggestion = false;
   
   final List<String> _messages = [
     'Amo ela',
@@ -78,7 +79,7 @@ class _SettingsComponentState extends State<SettingsComponent> {
       'id': id,
       'message': _messages[_random.nextInt(_messages.length)],
       'left': _random.nextDouble() * 200 + 30,
-      'top': _random.nextDouble() * 50 + 20,
+      'top': _random.nextDouble() * 100 + 280,
       'opacity': 1.0,
     };
     
@@ -114,58 +115,107 @@ class _SettingsComponentState extends State<SettingsComponent> {
           padding: const EdgeInsets.all(20),
           children: [
             _buildAppPreferences(),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             _buildSnoopyWithBalloons(),
-            SizedBox(height: 80),
+            const SizedBox(height: 20),
+            _buildBalloonArea(),
+            const SizedBox(height: 80),
           ],
         ),
         Positioned(
-          left: 20,
           right: 20,
-          bottom: 20,
-          child: _buildSuggestionText(),
+          bottom: 10,
+          child: _buildInfoButton(),
         ),
+        if (_showSuggestion)
+          Positioned(
+            left: 20,
+            right: 80,
+            bottom: 20,
+            child: _buildSuggestionText(),
+          ),
       ],
+    );
+  }
+
+  Widget _buildInfoButton() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFe83f3f),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: Icon(
+          _showSuggestion ? Icons.info_outline : Icons.info,
+          color: Colors.white,
+          size: 24,
+        ),
+        onPressed: () {
+          setState(() {
+            _showSuggestion = !_showSuggestion;
+          });
+        },
+        tooltip: 'Mostrar sugestões',
+      ),
     );
   }
 
   Widget _buildSnoopyWithBalloons() {
     return SizedBox(
-      height: 300,
-      child: Stack(
-        children: [
-          Center(
-            child: Column(
-              children: [
-                Container(
-                  width: 250,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 3),
-                  ),
-                  child: Image.asset(
-                    'lib/assets/snoopy.gif',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ],
+      height: 280,
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black, width: 3),
+              ),
+              child: Image.asset(
+                'lib/assets/snoopy.gif',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          
-          ..._balloons.map((balloon) {
-            return BalloonWidget(
-              key: ValueKey(balloon['id']),
-              message: balloon['message'] as String,
-              left: balloon['left'] as double,
-              top: balloon['top'] as double,
-              opacity: balloon['opacity'] as double,
-              onTap: () {
-                _removeBalloon(balloon);
-              },
-            );
-          }).toList(),
-        ],
+            const SizedBox(height: 10),
+            Text(
+              'Clique nos balões abaixo!',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBalloonArea() {
+    return SizedBox(
+      height: 200,
+      child: Stack(
+        children: _balloons.map((balloon) {
+          return BalloonWidget(
+            key: ValueKey(balloon['id']),
+            message: balloon['message'] as String,
+            left: balloon['left'] as double,
+            top: balloon['top']! - 280,
+            opacity: balloon['opacity'] as double,
+            onTap: () {
+              _removeBalloon(balloon);
+            },
+          );
+        }).toList(),
       ),
     );
   }
@@ -215,6 +265,13 @@ class _SettingsComponentState extends State<SettingsComponent> {
           color: Colors.grey[300]!,
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Text(
         'Caso você queira que eu troque algo no aplicativo ou adicione algo, pode me dizer',
