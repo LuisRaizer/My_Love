@@ -28,14 +28,12 @@ class BalloonController extends ChangeNotifier {
 
   Future<void> _loadFromStorage() async {
     _totalPopped = await StorageService.getTotalPopped();
-    print('BalloonController: Carregados $_totalPopped balões estourados do storage');
     notifyListeners();
   }
 
   void startSpawning() {
     if (_spawnTimer != null) return;
     _spawnTimer = Timer.periodic(_spawnInterval, (timer) {
-      print('BalloonController: Timer tick. Balões ativos: ${_activeBalloons.length}');
       if (_activeBalloons.length < _maxBalloons) {
         _spawnBalloon();
       }
@@ -43,7 +41,6 @@ class BalloonController extends ChangeNotifier {
   }
 
   void stopSpawning() {
-    print('BalloonController: Parando spawn');
     _spawnTimer?.cancel();
     _spawnTimer = null;
   }
@@ -51,14 +48,12 @@ class BalloonController extends ChangeNotifier {
   void _spawnBalloon() {
     final balloon = _manager.createRandomBalloon(maxTop: 100);
     
-    print('BalloonController: Criando balão ${balloon.id} em (${balloon.left}, ${balloon.top})');
     
     balloon.startAutoRemoveTimer(_balloonLifetime, () {
       removeBalloon(balloon.id, popped: false);
     });
 
     _activeBalloons.add(balloon);
-    print('BalloonController: Balão adicionado. Total: ${_activeBalloons.length}');
     notifyListeners();
   }
 
@@ -109,11 +104,6 @@ class BalloonController extends ChangeNotifier {
       _activeBalloons[index].incrementTaps();
       notifyListeners();
     }
-  }
-
-  void addBalloon() {
-    print('BalloonController: Adicionando balão manualmente');
-    _spawnBalloon();
   }
 
   void removeAllBalloons() {
