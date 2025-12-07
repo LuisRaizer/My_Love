@@ -15,12 +15,9 @@ class BalloonController extends ChangeNotifier {
   List<Balloon> get activeBalloons => List.unmodifiable(_activeBalloons);
 
   int _totalPopped = 0;
-  int _highestCombo = 0;
-  Timer? _comboTimer;
   final Map<String, int> _poppedByType = {};
 
   int get totalPopped => _totalPopped;
-  int get highestCombo => _highestCombo;
   Map<String, int> get poppedByType => Map.unmodifiable(_poppedByType);
 
   void Function(int milestone)? onReachMilestone;
@@ -128,7 +125,6 @@ class BalloonController extends ChangeNotifier {
 
   void resetStats() async {
     _totalPopped = 0;
-    _highestCombo = 0;
     _poppedByType.clear();
     await StorageService.resetAll();
     notifyListeners();
@@ -137,7 +133,6 @@ class BalloonController extends ChangeNotifier {
   @override
   void dispose() {
     _spawnTimer?.cancel();
-    _comboTimer?.cancel();
     for (var balloon in _activeBalloons) {
       balloon.cancelTimer();
     }

@@ -326,7 +326,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
                 children: [
                   SizedBox(height: 6),
                   Text(
-                    'Toque para enviar uma mensagem, c pode adicionar também!',
+                    'Toque para enviar uma mensagem para mim, c pode adicionar!',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],

@@ -77,6 +77,6 @@ Tenha em mente que eu quero sim construir um lar com você, eu quero com certeza
 
 Você merece todo amor, toda felicidade e todas as coisas boas que a vida e eu podemos oferecer.
 
-Te amo mais do que palavras podem expressar!""";
+Te amo mais do que palavras podem expressar""";
   }
 }

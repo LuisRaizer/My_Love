@@ -87,7 +87,7 @@ class _SettingsComponentState extends State<SettingsComponent> {
             right: 80,
             bottom: 20,
             child: _buildSuggestionText(),
-          ),
+        ),
       ],
     );
   }
