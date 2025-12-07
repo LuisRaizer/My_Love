@@ -58,11 +58,13 @@ class BalloonController extends ChangeNotifier {
   }
 
   void removeBalloon(String balloonId, {bool popped = true}) {
+    Balloon? poppedBalloon;
     bool needsUpdate = false;
     
     for (int i = 0; i < _activeBalloons.length; i++) {
       if (_activeBalloons[i].id == balloonId) {
         _activeBalloons[i].cancelTimer();
+        poppedBalloon = _activeBalloons[i];
         _activeBalloons.removeAt(i);
         needsUpdate = true;
         break;
@@ -70,6 +72,9 @@ class BalloonController extends ChangeNotifier {
     }
     
     if (needsUpdate) {
+      if (popped && poppedBalloon != null) {
+        _recordPop(poppedBalloon);
+      }
       notifyListeners();
     }
   }
