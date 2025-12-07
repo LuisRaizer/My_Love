@@ -56,11 +56,6 @@ class AppController extends ChangeNotifier {
     }
   }
 
-  void incrementLove() {
-    _state.incrementLove();
-    confettiController.play();
-  }
-
   void openGift() {
     _state.openGift();
     confettiController.play();

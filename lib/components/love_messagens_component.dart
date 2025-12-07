@@ -18,21 +18,9 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
       'isCustom': false,
     },
     {
-      'text': 'Cuidado meu bem, avisa qlqr coisa',
-      'label': 'Cuidado meu amor',
-      'icon': Icons.warning_amber,
-      'isCustom': false,
-    },
-    {
       'text': 'Te amo',
       'label': 'Te amo',
       'icon': Icons.favorite_border,
-      'isCustom': false,
-    },
-    {
-      'text': 'To muito cansada amor, vou dormir um pouco e volto já, te amo 🤍',
-      'label': 'Vai dormir um pouco?',
-      'icon': Icons.nightlight_round,
       'isCustom': false,
     },
   ];
@@ -225,26 +213,18 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
         child: Column(
           children: [
             Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Column(
                 children: [
+                  SizedBox(height: 6),
                   Text(
-                    'Mensagens automáticas para mim',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFe83f3f),
-                      fontFamily: 'FredokaOne',
-                    ),
+                    'Toque para enviar uma mensagem, c pode adicionar também!',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                    fontStyle: FontStyle.italic,
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Toque para enviar uma mensagem!',
-                    style: TextStyle(
-                      color: Color(0xFFe83f3f),
-                      fontSize: 16,
-                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

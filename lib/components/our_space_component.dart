@@ -14,14 +14,15 @@ class OurSpaceComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(child: _buildTimerCard()),
-        SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildStatsCard()),
-        SliverToBoxAdapter(child: SizedBox(height: 16)),
-        SliverToBoxAdapter(child: _buildPhotosCard()),
-        SliverToBoxAdapter(child: SizedBox(height: 20)),
+    return Column(
+      children: [
+        _buildTimerCard(),
+        SizedBox(height: 8),
+        
+        Expanded(
+          child: _buildPhotosCard(context),
+        ),
+        SizedBox(height: 20),
       ],
     );
   }
@@ -33,12 +34,12 @@ class OurSpaceComponent extends StatelessWidget {
         return Card(
           margin: EdgeInsets.all(16),
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(24),
             child: Column(
               children: [
                 Text(
-                  '⏰ Nosso Tempo Juntos',
-                  style: TextStyle(fontFamily: 'FredokaOne', fontSize: 20),
+                  'Nosso Tempinho Juntos...',
+                  style: TextStyle(fontFamily: 'FredokaOne', fontSize: 24),
                 ),
                 SizedBox(height: 16),
                 Text(
@@ -48,7 +49,7 @@ class OurSpaceComponent extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Desde nosso primeiro beijo ❤️',
+                  'Desde aquele dia na Unifor ❤️‍🩹',
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                     color: Colors.grey,
@@ -62,47 +63,7 @@ class OurSpaceComponent extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsCard() {
-    return Card(
-      margin: EdgeInsets.all(16),
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Text(
-              '📊 Nossas Estatísticas',
-              style: TextStyle(fontFamily: 'FredokaOne', fontSize: 20),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatItem(
-                  appController.state.loveCount.toString(),
-                  'Te Amo',
-                  Icons.favorite,
-                ),
-                _buildStatItem('127', 'Horas Discord', Icons.chat),
-                _buildStatItem('+1000', 'Cuidado', Icons.healing_outlined),
-              ],
-            ),
-            SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: appController.incrementLove,
-              label: Text('+1 ❤️'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFe83f3f),
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPhotosCard() {
+  Widget _buildPhotosCard(BuildContext context) {
     final List<Map<String, dynamic>> ourPhotos = [
       {
         'title': 'Bilhetinhos',
@@ -147,6 +108,7 @@ class OurSpaceComponent extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -160,155 +122,169 @@ class OurSpaceComponent extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: ourPhotos.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    _showPhotoDialog(context, ourPhotos[index]);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Color(0xFF87CEEB).withOpacity(0.2),
-                      border: Border.all(color: Color(0xFFe83f3f), width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.15),
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            ourPhotos[index]['image'],
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Color(0xFF87CEEB).withOpacity(0.4),
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.photo,
-                                        size: 40,
-                                        color: Color(
-                                          0xFFe83f3f,
-                                        ).withOpacity(0.6),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        'Foto ${index + 1}',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Color(0xFFe83f3f),
-                                          fontWeight: FontWeight.bold,
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.2,
+                ),
+                itemCount: ourPhotos.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      _showPhotoDialog(context, ourPhotos[index]);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Color(0xFF87CEEB).withOpacity(0.2),
+                        border: Border.all(color: Color(0xFFe83f3f), width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: Image.asset(
+                              ourPhotos[index]['image'],
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Color(0xFF87CEEB).withOpacity(0.4),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.photo,
+                                          size: 50,
+                                          color: Color(0xFFe83f3f).withOpacity(0.6),
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(height: 12),
+                                        Text(
+                                          'Foto ${index + 1}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xFFe83f3f),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(14),
+                                  bottomRight: Radius.circular(14),
                                 ),
-                              );
-                            },
-                          ),
-                        ),
-
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [
+                                    Colors.black.withOpacity(0.9),
+                                    Colors.black.withOpacity(0.6),
+                                    Colors.transparent,
+                                  ],
+                                  stops: [0.0, 0.5, 1.0],
+                                ),
                               ),
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Colors.black.withOpacity(0.8),
-                                  Colors.transparent,
-                                ],
+                              height: 60,
+                            ),
+                          ),
+
+                          Positioned(
+                            bottom: 4,
+                            left: 0,
+                            right: 0,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                ourPhotos[index]['title'],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      offset: Offset(1, 1),
+                                      blurRadius: 4,
+                                      color: Colors.black.withOpacity(0.9),
+                                    ),
+                                  ],
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            height: 40,
                           ),
-                        ),
 
-                        Positioned(
-                          bottom: 8,
-                          left: 0,
-                          right: 0,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6),
-                            child: Text(
-                              ourPhotos[index]['title'],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
+                          Positioned(
+                            top: 6,
+                            left: 6,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                ourPhotos[index]['date'],
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.zoom_in,
+                                size: 18,
                                 color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    offset: Offset(1, 1),
-                                    blurRadius: 3,
-                                    color: Colors.black.withOpacity(0.8),
-                                  ),
-                                ],
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatItem(String value, String label, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, size: 32, color: Color(0xFFe83f3f)),
-        SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFe83f3f),
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(fontSize: 14),
-          textAlign: TextAlign.center,
-        ),
-      ],
     );
   }
 
@@ -359,7 +335,7 @@ class OurSpaceComponent extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 2),
                           Row(
                             children: [
                               Icon(
