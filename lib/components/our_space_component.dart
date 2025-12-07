@@ -88,6 +88,8 @@ class OurSpaceComponent extends StatelessWidget {
 
             Expanded(
               child: GridView.builder(
+                addAutomaticKeepAlives: false,
+                addRepaintBoundaries: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
@@ -122,6 +124,8 @@ class OurSpaceComponent extends StatelessWidget {
                               width: double.infinity,
                               height: double.infinity,
                               fit: BoxFit.cover,
+                              cacheWidth: 300,
+                              cacheHeight: 300,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   color: Color(0xFF87CEEB).withOpacity(0.4),

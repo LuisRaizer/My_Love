@@ -31,9 +31,6 @@ class _SettingsComponentState extends State<SettingsComponent> {
     _balloonController.onReachMilestone = _showMilestoneDialog;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final totalPopped = await StorageService.getTotalPopped();
-      print('Total estourados do storage: $totalPopped');
-      
       _balloonController.startSpawning();
     });
   }
@@ -60,9 +57,6 @@ class _SettingsComponentState extends State<SettingsComponent> {
   
   @override
   Widget build(BuildContext context) {
-    print('Build SettingsComponent. Balões: ${_balloonController.activeBalloons.length}');
-    print('Total estourados: ${_balloonController.totalPopped}');
-    
     return Stack(
       children: [
         ListView(

@@ -26,7 +26,8 @@ class _BalloonWidgetState extends State<BalloonWidget>
   late Animation<double> _floatAnimation;
   late AnimationController _tapController;
   late Animation<double> _scaleAnimation;
-  
+  bool _isProcessingTap = false;
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +64,9 @@ class _BalloonWidgetState extends State<BalloonWidget>
   }
   
   Future<void> _handleTap() async {
+    if (_isProcessingTap) return;
+    _isProcessingTap = true;
+    
     try {
       await _tapController.forward();
       await _tapController.reverse();
@@ -75,9 +79,11 @@ class _BalloonWidgetState extends State<BalloonWidget>
     } catch (e) {
       print('Erro inesperado no tap: $e');
       widget.onTap();
+    } finally {
+      _isProcessingTap = false;
     }
   }
-  
+
   double _calculateWidth(String message) {
     final int length = message.length;
     
