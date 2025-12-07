@@ -1,22 +1,17 @@
 import 'dart:math';
-
+import 'package:app/utils/balloon_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:app/services/audio_service.dart';
+import 'package:app/models/balloon_model.dart';
 
 class BalloonWidget extends StatefulWidget {
-  final String message;
-  final double left;
-  final double top;
-  final double opacity;
-  final VoidCallback? onTap;
+  final Balloon balloon;
+  final VoidCallback onTap;
 
   const BalloonWidget({
     super.key,
-    required this.message,
-    required this.left,
-    required this.top,
-    required this.opacity,
-    this.onTap,
+    required this.balloon,
+    required this.onTap, required double topOffset,
   });
 
   @override
@@ -24,58 +19,86 @@ class BalloonWidget extends StatefulWidget {
 }
 
 class _BalloonWidgetState extends State<BalloonWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+    with TickerProviderStateMixin  {
+  late AnimationController _floatController;
   late Animation<double> _floatAnimation;
-
+  late AnimationController _tapController;
+  late Animation<double> _scaleAnimation;
+  
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(
+    
+    _floatController = AnimationController(
       duration: Duration(milliseconds: 3000 + Random().nextInt(2000)),
       vsync: this,
     )..repeat(reverse: true);
-
+    
     _floatAnimation = Tween<double>(
       begin: -3.0,
       end: 3.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    ).animate(CurvedAnimation(
+      parent: _floatController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _tapController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+    
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.2), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 50),
+    ]).animate(_tapController);
   }
-
+  
   @override
   void dispose() {
-    _controller.dispose();
+    _floatController.dispose();
+    _tapController.dispose();
     super.dispose();
   }
-
-  void _handleTap() async {
-    await AudioService.playPopSound();
-    
-    widget.onTap?.call();
+  
+  Future<void> _handleTap() async {
+    try {
+      await _tapController.forward();
+      await _tapController.reverse();
+      
+      widget.onTap();
+      
+      if (widget.balloon.isReadyToPop) {
+        await AudioService.playPopSound();
+      }
+    } catch (e) {
+      print('Erro inesperado no tap: $e');
+      widget.onTap();
+    }
   }
-
+  
   @override
   Widget build(BuildContext context) {
+    final color = BalloonStyles.getColor(widget.balloon.type);
+    final icon = BalloonStyles.getIcon(widget.balloon.type);
+    
     return AnimatedBuilder(
-      animation: _floatAnimation,
+      animation: Listenable.merge([_floatAnimation, _scaleAnimation]),
       builder: (context, child) {
         return Positioned(
-          left: widget.left,
-          top: widget.top + _floatAnimation.value,
-          child: Opacity(
-            opacity: widget.opacity,
+          left: widget.balloon.left,
+          top: widget.balloon.top + _floatAnimation.value,
+          child: Transform.scale(
+            scale: _scaleAnimation.value,
             child: GestureDetector(
               onTap: _handleTap,
               child: Container(
-                constraints: BoxConstraints(maxWidth: 180),
+                constraints: const BoxConstraints(maxWidth: 180),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.15),
@@ -83,23 +106,50 @@ class _BalloonWidgetState extends State<BalloonWidget>
                       offset: const Offset(0, 3),
                     ),
                   ],
-                  border: Border.all(
-                    color: Color(0xFF74FF6F),
+                    color: Colors.white,
+                    border: Border.all(
+                    color: color,
                     width: 2,
                   ),
                 ),
-                child: Text(
-                  widget.message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF74FF6F),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    height: 1.4,
-                  ),
-                  softWrap: true,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.balloon.requiredTaps > 1)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Text(
+                          '${widget.balloon.currentTaps}/${widget.balloon.requiredTaps}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          icon,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            widget.balloon.message,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
