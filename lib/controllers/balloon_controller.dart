@@ -2,11 +2,12 @@ import 'dart:async';
 import 'package:app/utils/balloon_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:app/models/balloon_model.dart';
+import 'package:app/services/store_balloon_service.dart';
 
 class BalloonController extends ChangeNotifier {
   final BalloonManager _manager = BalloonManager();
   Timer? _spawnTimer;
-  final int _maxBalloons = 8;
+  final int _maxBalloons = 12;
   final Duration _spawnInterval = const Duration(seconds: 3);
   final Duration _balloonLifetime = const Duration(seconds: 25);
 
@@ -14,15 +15,25 @@ class BalloonController extends ChangeNotifier {
   List<Balloon> get activeBalloons => List.unmodifiable(_activeBalloons);
 
   int _totalPopped = 0;
-  int _consecutivePops = 0;
   int _highestCombo = 0;
   Timer? _comboTimer;
   final Map<String, int> _poppedByType = {};
 
   int get totalPopped => _totalPopped;
-  int get consecutivePops => _consecutivePops;
   int get highestCombo => _highestCombo;
   Map<String, int> get poppedByType => Map.unmodifiable(_poppedByType);
+
+  void Function(int milestone)? onReachMilestone;
+
+  BalloonController() {
+    _loadFromStorage();
+  }
+
+  Future<void> _loadFromStorage() async {
+    _totalPopped = await StorageService.getTotalPopped();
+    print('BalloonController: Carregados $_totalPopped balões estourados do storage');
+    notifyListeners();
+  }
 
   void startSpawning() {
     if (_spawnTimer != null) return;
@@ -70,29 +81,28 @@ class BalloonController extends ChangeNotifier {
     }
   }
 
-  void _recordPop(Balloon balloon) {
+  void _recordPop(Balloon balloon) async {
     _totalPopped++;
     
-    // Atualizar contagem por tipo
+    await StorageService.saveTotalPopped(_totalPopped);
+    
+    if (_totalPopped % 20 == 0) {
+      final lastMilestoneShown = await StorageService.getLastMilestoneShown();
+      
+      if (_totalPopped > lastMilestoneShown) {
+        await StorageService.saveLastMilestoneShown(_totalPopped);
+        if (onReachMilestone != null) {
+          onReachMilestone!(_totalPopped);
+        }
+      }
+    }
+    
     _poppedByType.update(
       balloon.type,
       (value) => value + 1,
       ifAbsent: () => 1,
     );
-
-    // Sistema de combo
-    _consecutivePops++;
-    if (_consecutivePops > _highestCombo) {
-      _highestCombo = _consecutivePops;
-    }
-
-    _comboTimer?.cancel();
-    _comboTimer = Timer(const Duration(seconds: 3), () {
-      if (_consecutivePops > 0) {
-        _consecutivePops = 0;
-        notifyListeners();
-      }
-    });
+    notifyListeners();
   }
 
   void incrementBalloonTaps(String balloonId) {
@@ -116,11 +126,11 @@ class BalloonController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetStats() {
+  void resetStats() async {
     _totalPopped = 0;
-    _consecutivePops = 0;
     _highestCombo = 0;
     _poppedByType.clear();
+    await StorageService.resetAll();
     notifyListeners();
   }
 

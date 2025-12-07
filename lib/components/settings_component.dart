@@ -1,7 +1,9 @@
+import 'package:app/services/store_balloon_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/balloon_controller.dart';
 import 'package:app/widgets/balloon_area.dart';
+import 'package:app/widgets/milestone_dialog.dart';
 
 class SettingsComponent extends StatefulWidget {
   final AppController appController;
@@ -26,13 +28,26 @@ class _SettingsComponentState extends State<SettingsComponent> {
     super.initState();
     _balloonController = widget.balloonController ?? BalloonController();
     
-    // DEBUG: Verificar se está iniciando
-    print('Iniciando BalloonController...');
-    
-    // Iniciar imediatamente, não usar Future.delayed
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _balloonController.onReachMilestone = _showMilestoneDialog;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final totalPopped = await StorageService.getTotalPopped();
+      print('Total estourados do storage: $totalPopped');
+      
       _balloonController.startSpawning();
       print('Spawn iniciado. Balões ativos: ${_balloonController.activeBalloons.length}');
+    });
+  }
+  
+  void _showMilestoneDialog(int milestone) {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => MilestoneDialog(milestone: milestone),
+        );
+      }
     });
   }
   
@@ -47,6 +62,7 @@ class _SettingsComponentState extends State<SettingsComponent> {
   @override
   Widget build(BuildContext context) {
     print('Build SettingsComponent. Balões: ${_balloonController.activeBalloons.length}');
+    print('Total estourados: ${_balloonController.totalPopped}');
     
     return Stack(
       children: [
@@ -58,7 +74,6 @@ class _SettingsComponentState extends State<SettingsComponent> {
             _buildSnoopyWithBalloons(),
             const SizedBox(height: 20),
             _buildBalloonArea(),
-            const SizedBox(height: 20),
           ],
         ),
         Positioned(
@@ -79,14 +94,17 @@ class _SettingsComponentState extends State<SettingsComponent> {
   
   Widget _buildBalloonArea() {
     print('Criando BalloonArea...');
-    return BalloonArea(
-      controller: _balloonController,
-      height: 150,
-      topOffset: 0, // Alterado de 280 para 0
+    return Container(
+      height: 220,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: BalloonArea(
+        controller: _balloonController,
+        height: 220,
+        topOffset: 0,
+      ),
     );
   }
-  
-  
+
   Widget _buildInfoButton() {
     return Container(
       decoration: BoxDecoration(
@@ -188,6 +206,17 @@ class _SettingsComponentState extends State<SettingsComponent> {
                 } catch (e) {
                   _showErrorSnackBar('Erro ao redefinir introdução');
                 }
+              },
+            ),
+            const SizedBox(height: 12),
+            _buildSettingButton(
+              title: 'Zerar Contador de Balões',
+              subtitle: 'Reinicia toda a contagem de balões',
+              icon: Icons.restart_alt,
+              color: Colors.blue,
+              onTap: () {
+                _balloonController.resetStats();
+                _showSuccessSnackBar('Contador zerado! O progresso foi resetado.');
               },
             ),
           ],

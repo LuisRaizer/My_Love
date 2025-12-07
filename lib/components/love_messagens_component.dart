@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app/services/store_balloon_service.dart';
 
 class LoveMessagesComponent extends StatefulWidget {
   const LoveMessagesComponent({super.key});
@@ -23,16 +24,26 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
       'icon': Icons.favorite_border,
       'isCustom': false,
     },
+    {
+      'text': '',
+      'label': 'Ver balões',
+      'icon': Icons.ballot,
+      'isCustom': false,
+      'isBalloonMessage': true,
+    },
   ];
 
   final List<Map<String, dynamic>> _customMessages = [];
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
+  
+  int _totalPoppedBalloons = 0;
 
   @override
   void initState() {
     super.initState();
     _loadCustomMessages();
+    _loadBalloonCount();
   }
 
   @override
@@ -40,6 +51,17 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
     _messageController.dispose();
     _messageFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadBalloonCount() async {
+    try {
+      final total = await StorageService.getTotalPopped();
+      setState(() {
+        _totalPoppedBalloons = total;
+      });
+    } catch (e) {
+      print('Erro ao carregar contagem de balões: $e');
+    }
   }
 
   Future<void> _loadCustomMessages() async {
@@ -130,7 +152,93 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
     );
   }
 
-  Future<void> _sendMessage(String message, BuildContext context) async {
+  Future<void> _sendMessage(String message, BuildContext context, {bool isBalloonMessage = false}) async {
+    String finalMessage = message;
+    
+    if (isBalloonMessage) {
+      await _loadBalloonCount();
+      finalMessage = 'Olha amor, estourei $_totalPoppedBalloons balões no app! 🎈💥';
+    }
+    
+    final shouldSend = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.ballot, color: Color(0xFFe83f3f)),
+            SizedBox(width: 10),
+            Text('Enviar mensagem'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Você vai enviar:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                finalMessage,
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+            SizedBox(height: 10),
+            if (isBalloonMessage)
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFF3E0),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange.shade300, width: 1),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.celebration, size: 20, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '🎉 Você já estourou $_totalPoppedBalloons balões!',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.orange.shade800,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFe83f3f),
+              foregroundColor: Colors.white,
+            ),
+            child: Text('Enviar'),
+          ),
+        ],
+      ),
+    );
+    
+    if (shouldSend != true) {
+      return;
+    }
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -152,7 +260,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
     
     String phone = '5585997593344';
     
-    String url = 'https://wa.me/$phone?text=${Uri.encodeComponent(message)}';
+    String url = 'https://wa.me/$phone?text=${Uri.encodeComponent(finalMessage)}';
     
     try {
       if (await canLaunchUrl(Uri.parse(url))) {
@@ -281,6 +389,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
                   itemBuilder: (context, index) {
                     final msg = allMessages[index];
                     final isCustom = msg['isCustom'] as bool;
+                    final isBalloonMessage = msg['isBalloonMessage'] == true;
                     
                     return GestureDetector(
                       onLongPress: isCustom
@@ -304,7 +413,11 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () => _sendMessage(msg['text'] as String, context),
+                                  onTap: () => _sendMessage(
+                                    msg['text'] as String, 
+                                    context, 
+                                    isBalloonMessage: isBalloonMessage
+                                  ),
                                   borderRadius: BorderRadius.circular(16),
                                   child: Container(
                                     width: double.infinity,

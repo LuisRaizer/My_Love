@@ -28,7 +28,6 @@ class Balloon {
   }
   
   void startAutoRemoveTimer(Duration duration, VoidCallback onTimerComplete) {
-    // CORREÇÃO: Cancelar timer existente primeiro
     autoRemoveTimer?.cancel();
     autoRemoveTimer = Timer(duration, onTimerComplete);
   }

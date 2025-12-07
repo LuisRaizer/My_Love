@@ -10,7 +10,7 @@ class BalloonArea extends StatelessWidget {
   const BalloonArea({
     super.key,
     required this.controller,
-    this.height = 150,
+    this.height = 200,
     this.topOffset = 0,
   });
 

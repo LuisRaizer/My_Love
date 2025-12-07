@@ -7,11 +7,13 @@ import 'package:app/models/balloon_model.dart';
 class BalloonWidget extends StatefulWidget {
   final Balloon balloon;
   final VoidCallback onTap;
+  final double topOffset;
 
   const BalloonWidget({
     super.key,
     required this.balloon,
-    required this.onTap, required double topOffset,
+    required this.onTap,
+    required this.topOffset,
   });
 
   @override
@@ -76,40 +78,87 @@ class _BalloonWidgetState extends State<BalloonWidget>
     }
   }
   
+  double _calculateWidth(String message) {
+    final int length = message.length;
+    
+    if (length < 20) {
+      return 180.0;
+    } else if (length < 30) {
+      return 220.0;
+    } else if (length < 40) {
+      return 260.0;
+    } else {
+      return 300.0;
+    }
+  }
+  
+  EdgeInsets _calculatePadding(String message) {
+    final int length = message.length;
+    
+    if (length < 20) {
+      return const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+    } else if (length < 30) {
+      return const EdgeInsets.symmetric(horizontal: 18, vertical: 12);
+    } else if (length < 40) {
+      return const EdgeInsets.symmetric(horizontal: 20, vertical: 12);
+    } else {
+      return const EdgeInsets.symmetric(horizontal: 22, vertical: 12);
+    }
+  }
+  
+  double _calculateFontSize(String message) {
+    final int length = message.length;
+    
+    if (length < 20) {
+      return 14.0;
+    } else if (length < 30) {
+      return 13.0;
+    } else if (length < 40) {
+      return 12.0;
+    } else {
+      return 11.0;
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     final color = BalloonStyles.getColor(widget.balloon.type);
     final icon = BalloonStyles.getIcon(widget.balloon.type);
+    
+    final message = widget.balloon.message;
+    final width = _calculateWidth(message);
+    final padding = _calculatePadding(message);
+    final fontSize = _calculateFontSize(message);
     
     return AnimatedBuilder(
       animation: Listenable.merge([_floatAnimation, _scaleAnimation]),
       builder: (context, child) {
         return Positioned(
           left: widget.balloon.left,
-          top: widget.balloon.top + _floatAnimation.value,
+          top: widget.balloon.top + _floatAnimation.value + widget.topOffset,
           child: Transform.scale(
             scale: _scaleAnimation.value,
             child: GestureDetector(
               onTap: _handleTap,
               child: Container(
-                constraints: const BoxConstraints(maxWidth: 180),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                constraints: BoxConstraints(
+                  maxWidth: width,
+                  minWidth: 180.0,
                 ),
+                padding: padding,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.15),
-                      blurRadius: 6,
-                      offset: const Offset(0, 3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
                   ],
-                    color: Colors.white,
-                    border: Border.all(
+                  color: Colors.white,
+                  border: Border.all(
                     color: color,
-                    width: 2,
+                    width: 3,
                   ),
                 ),
                 child: Column(
@@ -117,12 +166,13 @@ class _BalloonWidgetState extends State<BalloonWidget>
                   children: [
                     if (widget.balloon.requiredTaps > 1)
                       Padding(
-                        padding: const EdgeInsets.only(top: 0),
+                        padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
                           '${widget.balloon.currentTaps}/${widget.balloon.requiredTaps}',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
+                            color: color,
                           ),
                         ),
                       ),
@@ -131,19 +181,21 @@ class _BalloonWidgetState extends State<BalloonWidget>
                       children: [
                         Icon(
                           icon,
-                          size: 16,
+                          size: fontSize + 4,
+                          color: color,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         Flexible(
                           child: Text(
-                            widget.balloon.message,
+                            message,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: fontSize,
                               fontWeight: FontWeight.w600,
-                              height: 1.4,
+                              height: 1.5,
+                              color: Colors.grey[800],
                             ),
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
