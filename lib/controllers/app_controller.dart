@@ -34,7 +34,6 @@ class AppController extends ChangeNotifier {
       print('Erro ao salvar preferência de intro: $e');
     }
   }
-  
 
   void startApp({bool skipIntroNextTime = false}) async {
     if (skipIntroNextTime) {
@@ -42,7 +41,6 @@ class AppController extends ChangeNotifier {
     }
     
     _state.hideIntro();
-    _state.toggleMusic();
     confettiController.play();
   }
   Future<void> resetIntroPreference() async {
@@ -54,11 +52,6 @@ class AppController extends ChangeNotifier {
     } catch (e) {
       print('Erro ao resetar preferência de intro: $e');
     }
-  }
-
-  void openGift() {
-    _state.openGift();
-    confettiController.play();
   }
 
   @override

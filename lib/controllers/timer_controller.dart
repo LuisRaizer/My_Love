@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:app/utils/personal_content.dart';
 import 'package:flutter/material.dart';
 
 class TimerController extends ChangeNotifier {
-  final DateTime _firstKissDate = DateTime(2025, 5, 15);
-  Duration _timeTogether = Duration.zero;
+  final DateTime _firstKissDate = PersonalConfig.relationshipStartDate;  Duration _timeTogether = Duration.zero;
   Timer? _timer;
 
   Duration get timeTogether => _timeTogether;
