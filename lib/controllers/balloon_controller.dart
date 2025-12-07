@@ -63,17 +63,18 @@ class BalloonController extends ChangeNotifier {
   }
 
   void removeBalloon(String balloonId, {bool popped = true}) {
-    final index = _activeBalloons.indexWhere((b) => b.id == balloonId);
-    if (index != -1) {
-      final balloon = _activeBalloons[index];
-      balloon.cancelTimer();
-      _activeBalloons.removeAt(index);
-
-      if (popped) {
-        _recordPop(balloon);
+    bool needsUpdate = false;
+    
+    for (int i = 0; i < _activeBalloons.length; i++) {
+      if (_activeBalloons[i].id == balloonId) {
+        _activeBalloons[i].cancelTimer();
+        _activeBalloons.removeAt(i);
+        needsUpdate = true;
+        break;
       }
-
-      print('BalloonController: Balão removido. Restantes: ${_activeBalloons.length}');
+    }
+    
+    if (needsUpdate) {
       notifyListeners();
     }
   }

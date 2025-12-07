@@ -17,7 +17,7 @@ class LetterComponent extends StatelessWidget {
   }
 
   Widget _buildLetterCard() {
-    return Card(
+    return const Card(
       margin: EdgeInsets.all(16),
       child: Padding(
         padding: EdgeInsets.all(20),

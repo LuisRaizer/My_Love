@@ -4,6 +4,8 @@ import 'package:app/views/home_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+
   runApp(MyApp());
 }
 
