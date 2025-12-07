@@ -1,4 +1,3 @@
-import 'package:app/services/store_balloon_service.dart';
 import 'package:flutter/material.dart';
 import 'package:app/controllers/app_controller.dart';
 import 'package:app/controllers/balloon_controller.dart';
@@ -7,12 +6,10 @@ import 'package:app/widgets/milestone_dialog.dart';
 
 class SettingsComponent extends StatefulWidget {
   final AppController appController;
-  final BalloonController? balloonController;
 
   const SettingsComponent({
     super.key,
     required this.appController,
-    this.balloonController,
   });
 
   @override
@@ -26,7 +23,7 @@ class _SettingsComponentState extends State<SettingsComponent> {
   @override
   void initState() {
     super.initState();
-    _balloonController = widget.balloonController ?? BalloonController();
+    _balloonController = BalloonController();
     
     _balloonController.onReachMilestone = _showMilestoneDialog;
 
@@ -49,9 +46,8 @@ class _SettingsComponentState extends State<SettingsComponent> {
   
   @override
   void dispose() {
-    if (widget.balloonController == null) {
-      _balloonController.dispose();
-    }
+    _balloonController.stopSpawning();
+    _balloonController.dispose();
     super.dispose();
   }
   

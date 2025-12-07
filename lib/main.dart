@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: PersonalConfig.appName,
       theme: ThemeData(
         primaryColor: Color(0xFFe83f3f),
         fontFamily: 'PatrickHand',

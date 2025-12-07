@@ -155,10 +155,11 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
 
   Future<void> _sendMessage(String message, BuildContext context, {bool isBalloonMessage = false}) async {
     String finalMessage = message;
+    int balloonCount = 0; 
     
     if (isBalloonMessage) {
-      await _loadBalloonCount();
-      finalMessage = 'Olha amor, estourei $_totalPoppedBalloons balões no app! 🎈💥';
+      balloonCount = await StorageService.getTotalPopped();
+      finalMessage = 'Olha amor, estourei $balloonCount balões no app! 🎈💥';
     }
     
     final shouldSend = await showDialog<bool>(
@@ -206,7 +207,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '🎉 Você já estourou $_totalPoppedBalloons balões!',
+                        '🎉 Você já estourou $balloonCount balões!',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange.shade800,
