@@ -125,7 +125,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
           Text(
             '🎉 PARABÉNS AMOOR! 🎉',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: const Color(0xFFe83f3f),
               fontFamily: 'PatrickHand',
@@ -144,7 +144,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
           Text(
             'Você alcançou um novo marco:',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 14,
               color: Colors.grey[700],
               fontWeight: FontWeight.w500,
             ),
@@ -157,8 +157,8 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFFe83f3f),
-                  Colors.orange.shade600,
+                  const Color.fromARGB(255, 20, 196, 0),
+                  const Color.fromARGB(255, 99, 255, 135),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -175,7 +175,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
             child: Text(
               '${widget.milestone} BALÕES',
               style: const TextStyle(
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 fontFamily: 'PatrickHand',
@@ -200,7 +200,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
               _getMessage(widget.milestone),
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 12,
                 color: Colors.grey[800],
                 fontStyle: FontStyle.italic,
                 height: 1.4,
@@ -208,7 +208,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
             ),
           ),
           
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
           
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -225,12 +225,12 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.play_arrow, size: 20),
+                Icon(Icons.play_arrow, size: 18),
                 SizedBox(width: 8),
                 Text(
                   'CONTINUAR',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.1,
                   ),
@@ -242,9 +242,9 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
           const SizedBox(height: 8),
           
           Text(
-            'Progresso salvo automaticamente',
+            'Pode me contar a quantia \n que vc estourou se quiser :)',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               color: Colors.grey[600],
             ),
           ),
@@ -267,7 +267,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> with SingleTickerProv
     } else if (milestone == 150) {
       return '🎊 QUE ISSO AMOR! 150 BALÕES! COMO PODE KKKKKK';
     } else if (milestone % 100 == 0) {
-      return '$milestone BALÕES! Você é simplesmente incrível! Te Amooo!! 🌟';
+      return '$milestone BALÕES! Você é simplesmente incrível! Te Amooo!! 💚';
     } else {
       return '$milestone balões estourados! Perfeito meu amor, continua assim! ❤️';
     }

@@ -148,11 +148,11 @@ class _SettingsComponentState extends State<SettingsComponent> {
                 },
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 6),
             Text(
               'Clique nos balões abaixo!',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 10,
                 color: Colors.grey[600],
                 fontStyle: FontStyle.italic,
               ),
@@ -232,10 +232,10 @@ class _SettingsComponentState extends State<SettingsComponent> {
         ],
       ),
       child: Text(
-        'Caso você queira que eu troque algo no aplicativo ou adicione algo, pode me dizer',
+        'Caso você queira que eu troque, remova ou adicione algo no aplicativo, pode me dizer',
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 10,
           color: Colors.grey[700],
           fontStyle: FontStyle.italic,
         ),
