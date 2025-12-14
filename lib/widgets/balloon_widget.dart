@@ -88,13 +88,13 @@ class _BalloonWidgetState extends State<BalloonWidget>
     final int length = message.length;
     
     if (length < 20) {
-      return 180.0;
+      return 150.0;
     } else if (length < 30) {
-      return 220.0;
+      return 200.0;
     } else if (length < 40) {
-      return 260.0;
+      return 240.0;
     } else {
-      return 300.0;
+      return 260.0;
     }
   }
   
@@ -149,7 +149,6 @@ class _BalloonWidgetState extends State<BalloonWidget>
               child: Container(
                 constraints: BoxConstraints(
                   maxWidth: width,
-                  minWidth: 180.0,
                 ),
                 padding: padding,
                 decoration: BoxDecoration(

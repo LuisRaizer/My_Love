@@ -493,15 +493,15 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
             
             if (_customMessages.isNotEmpty)
               Container(
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: EdgeInsets.symmetric(vertical: 1),
                 color: Colors.white.withOpacity(0.3),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.info_outline, size: 16, color: Color(0x6CE83F3F)),
-                    SizedBox(width: 8),
+                    SizedBox(width: 4),
                     Text(
-                      'Mantenha pressionado para remover mensagens personalizadas',
+                      'Pressione para remover mensagens personalizadas',
                       style: TextStyle(
                         fontSize: 12,
                         color: Color(0x6CE83F3F),
