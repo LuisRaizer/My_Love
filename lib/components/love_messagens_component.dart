@@ -39,13 +39,11 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
   
-  int _totalPoppedBalloons = 0;
 
   @override
   void initState() {
     super.initState();
     _loadCustomMessages();
-    _loadBalloonCount();
   }
 
   @override
@@ -55,16 +53,6 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
     super.dispose();
   }
 
-  Future<void> _loadBalloonCount() async {
-    try {
-      final total = await StorageService.getTotalPopped();
-      setState(() {
-        _totalPoppedBalloons = total;
-      });
-    } catch (e) {
-      print('Erro ao carregar contagem de balões: $e');
-    }
-  }
 
   Future<void> _loadCustomMessages() async {
     try {
@@ -201,7 +189,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '🎉 Você já estourou $balloonCount balões!',
+                        'Você já estourou $balloonCount balões!',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange.shade800,

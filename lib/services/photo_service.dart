@@ -56,7 +56,6 @@ class PhotoService {
       final file = File(imagePath);
       if (await file.exists()) {
         await file.delete();
-        print('🗑️ Arquivo removido (usuário deletou foto): $imagePath');
       }
     } catch (e) {
       print('❌ Erro ao remover arquivo: $e');
@@ -68,11 +67,6 @@ class PhotoService {
       final appDir = await getApplicationDocumentsDirectory();
       final fileName = 'gallery_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final targetPath = '${appDir.path}/$fileName';
-      
-      final originalFile = File(imagePath);
-      final originalSize = await originalFile.length();
-      print('📷 Tamanho original: ${(originalSize / (1024 * 1024)).toStringAsFixed(2)} MB');
-
       int quality = 35;
       
       final result = await FlutterImageCompress.compressAndGetFile(
@@ -85,11 +79,6 @@ class PhotoService {
       
       if (result != null) {
         final compressedFile = File(result.path);
-        final compressedSize = await compressedFile.length();
-        final sizeInMB = compressedSize / (1024 * 1024);
-        
-        print('✅ Imagem comprimida: ${sizeInMB.toStringAsFixed(2)} MB');
-        print('   Qualidade: $quality%');
         
         return compressedFile;
       }
