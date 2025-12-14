@@ -4,7 +4,7 @@ import 'package:app/controllers/app_controller.dart';
 class IntroView extends StatefulWidget {
   final AppController appController;
 
-  const IntroView({Key? key, required this.appController}) : super(key: key);
+  const IntroView({super.key, required this.appController});
 
   @override
   State<IntroView> createState() => _IntroViewState();

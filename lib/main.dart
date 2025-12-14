@@ -1,4 +1,3 @@
-import 'package:app/utils/personal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:app/views/home_view.dart';
 
@@ -10,6 +9,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

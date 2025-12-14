@@ -1,4 +1,5 @@
 import 'package:app/utils/personal_content.dart';
+import 'package:app/widgets/confirmation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,13 +39,11 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
   
-  int _totalPoppedBalloons = 0;
 
   @override
   void initState() {
     super.initState();
     _loadCustomMessages();
-    _loadBalloonCount();
   }
 
   @override
@@ -54,16 +53,6 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
     super.dispose();
   }
 
-  Future<void> _loadBalloonCount() async {
-    try {
-      final total = await StorageService.getTotalPopped();
-      setState(() {
-        _totalPoppedBalloons = total;
-      });
-    } catch (e) {
-      print('Erro ao carregar contagem de balões: $e');
-    }
-  }
 
   Future<void> _loadCustomMessages() async {
     try {
@@ -129,26 +118,19 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
   Future<void> _removeCustomMessage(int index) async {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Remover mensagem?'),
-        content: Text('Tem certeza que deseja remover esta mensagem?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              setState(() {
-                _customMessages.removeAt(index);
-              });
-              await _saveCustomMessages();
-              _showSuccessSnackBar('Mensagem removida!');
-            },
-            child: Text('Remover', style: TextStyle(color: Colors.red)),
-          ),
-        ],
+      builder: (context) => ConfirmationWidget(
+        title: 'Remover mensagem?',
+        content: 'Tem certeza que deseja remover esta mensagem?',
+        confirmText: 'Remover',
+        confirmColor: Colors.red,
+        icon: Icons.delete,
+        onConfirm: () async {
+          setState(() {
+            _customMessages.removeAt(index);
+          });
+          await _saveCustomMessages();
+          _showSuccessSnackBar('Mensagem removida!');
+        },
       ),
     );
   }
@@ -207,7 +189,7 @@ class _LoveMessagesComponentState extends State<LoveMessagesComponent> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '🎉 Você já estourou $balloonCount balões!',
+                        'Você já estourou $balloonCount balões!',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange.shade800,
