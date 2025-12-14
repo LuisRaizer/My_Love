@@ -15,7 +15,7 @@ class BalloonManager {
 
     if (rand < 0.05) {
       type = 'surprise';
-    } else if (rand < 0.25) {
+    } else if (rand < 0.30) {
       type = 'love';
     } else if (rand < 0.35) {
       type = 'secret';

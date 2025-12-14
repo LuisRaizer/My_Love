@@ -50,7 +50,7 @@ class OurSpaceComponent extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Desde aquele dia na Unifor ❤️‍🩹',
+                  'Desde aquele dia na Unifor 💚',
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                     color: Colors.grey,
@@ -190,7 +190,7 @@ class OurSpaceComponent extends StatelessWidget {
                                 ourPhotos[index]['title'],
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   shadows: [
