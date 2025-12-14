@@ -21,7 +21,7 @@ class BalloonWidget extends StatefulWidget {
 }
 
 class _BalloonWidgetState extends State<BalloonWidget>
-    with TickerProviderStateMixin  {
+    with TickerProviderStateMixin {
   late AnimationController _floatController;
   late Animation<double> _floatAnimation;
   late AnimationController _tapController;
@@ -31,48 +31,44 @@ class _BalloonWidgetState extends State<BalloonWidget>
   @override
   void initState() {
     super.initState();
-    
+
     _floatController = AnimationController(
       duration: Duration(milliseconds: 3000 + Random().nextInt(2000)),
       vsync: this,
     )..repeat(reverse: true);
-    
-    _floatAnimation = Tween<double>(
-      begin: -3.0,
-      end: 3.0,
-    ).animate(CurvedAnimation(
-      parent: _floatController,
-      curve: Curves.easeInOut,
-    ));
-    
+
+    _floatAnimation = Tween<double>(begin: -3.0, end: 3.0).animate(
+      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
+    );
+
     _tapController = AnimationController(
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    
+
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.2), weight: 50),
       TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 50),
     ]).animate(_tapController);
   }
-  
+
   @override
   void dispose() {
     _floatController.dispose();
     _tapController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _handleTap() async {
     if (_isProcessingTap) return;
     _isProcessingTap = true;
-    
+
     try {
       await _tapController.forward();
       await _tapController.reverse();
-      
+
       widget.onTap();
-      
+
       if (widget.balloon.isReadyToPop) {
         await AudioService.playPopSound();
       }
@@ -86,7 +82,7 @@ class _BalloonWidgetState extends State<BalloonWidget>
 
   double _calculateWidth(String message) {
     final int length = message.length;
-    
+
     if (length < 20) {
       return 150.0;
     } else if (length < 30) {
@@ -97,10 +93,10 @@ class _BalloonWidgetState extends State<BalloonWidget>
       return 260.0;
     }
   }
-  
+
   EdgeInsets _calculatePadding(String message) {
     final int length = message.length;
-    
+
     if (length < 20) {
       return const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
     } else if (length < 30) {
@@ -111,10 +107,10 @@ class _BalloonWidgetState extends State<BalloonWidget>
       return const EdgeInsets.symmetric(horizontal: 22, vertical: 12);
     }
   }
-  
+
   double _calculateFontSize(String message) {
     final int length = message.length;
-    
+
     if (length < 20) {
       return 14.0;
     } else if (length < 30) {
@@ -125,17 +121,17 @@ class _BalloonWidgetState extends State<BalloonWidget>
       return 11.0;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final color = BalloonStyles.getColor(widget.balloon.type);
     final icon = BalloonStyles.getIcon(widget.balloon.type);
-    
+
     final message = widget.balloon.message;
     final width = _calculateWidth(message);
     final padding = _calculatePadding(message);
     final fontSize = _calculateFontSize(message);
-    
+
     return AnimatedBuilder(
       animation: Listenable.merge([_floatAnimation, _scaleAnimation]),
       builder: (context, child) {
@@ -147,9 +143,7 @@ class _BalloonWidgetState extends State<BalloonWidget>
             child: GestureDetector(
               onTap: _handleTap,
               child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: width,
-                ),
+                constraints: BoxConstraints(maxWidth: width),
                 padding: padding,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
@@ -161,10 +155,7 @@ class _BalloonWidgetState extends State<BalloonWidget>
                     ),
                   ],
                   color: Colors.white,
-                  border: Border.all(
-                    color: color,
-                    width: 3,
-                  ),
+                  border: Border.all(color: color, width: 3),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -184,11 +175,7 @@ class _BalloonWidgetState extends State<BalloonWidget>
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          icon,
-                          size: fontSize + 4,
-                          color: color,
-                        ),
+                        Icon(icon, size: fontSize + 4, color: color),
                         const SizedBox(width: 10),
                         Flexible(
                           child: Text(
